@@ -2,6 +2,7 @@ import React, { useEffect, useState } from "react";
 import { useAtomValue, useSetAtom } from "jotai";
 import skeletonList from "@/public/dummylist.json";
 import Icons from "@/components/Icons";
+import Image from "next/image";
 import { Scrollbar } from "react-scrollbars-custom";
 import { isListDetailVisibleAtom } from "@/state/baseAtoms";
 import { fetchListsAtom } from "@/state/methods/fetchListsAtom";
@@ -90,9 +91,14 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
           onClick={() => {}} // Handle list click
           className="bg-white w-full h-[70.4vh] flex justify-center items-center text-center pl-5 pr-6 py-5 relative mt-[3px] rounded-[4px] select-none transition duration-150 ease-in-out"
         >
-          <span className="w-[14vw] -mt-[4.6vh] text-gray-800 font-medium text-2xl">
-            No lists found, you can create one!
-          </span>
+          <div className="flex flex-col justify-center gap-y-6 w-[14vw] -mt-[4.6vh]">
+            <div className="w-[260px] h-[260px]">
+              <Image src={"/vis1.webp"} alt={""} width={400} height={400} />
+            </div>
+            <p className="text-gray-800 font-medium text-2xl">
+              No lists found, you can create one!
+            </p>
+          </div>
         </div>
       </div>
     );

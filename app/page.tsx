@@ -70,7 +70,7 @@ export default function Home() {
   // If mobile
   if (isMobile) {
     return (
-      <div className="dark:bg-zinc-900 dark:text-white w-screen h-[100dvh]">
+      <div className="flex justify-center items-center dark:bg-zinc-900 dark:text-white w-screen h-[100dvh]">
         <IsMobile />
       </div>
     );

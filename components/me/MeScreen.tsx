@@ -7,6 +7,11 @@ import { supabase } from "@/lib/supabaseClient";
 import { Input } from "@headlessui/react";
 import { FaGithub } from "react-icons/fa";
 import Link from "next/link";
+import {
+  Disclosure,
+  DisclosureButton,
+  DisclosurePanel,
+} from "@headlessui/react";
 
 const MeScreen = () => {
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
@@ -19,14 +24,25 @@ const MeScreen = () => {
   const setStatus = useState<string | null>(null)[1];
 
   // Delete All User Lists
-  const [deleteMessage, setDeleteMessage] = useState("Delete all lists");
+  const [deleteMessage, setDeleteMessage] = useState("");
   const deleteAllLists = useSetAtom(deleteAllListsAtom);
   const handleDeleteAllLists = () => {
     deleteAllLists();
     setDeleteMessage("All lists have been deleted");
+    setDeleteModalVisible(false);
   };
 
-  const handleSignOut = async () => {
+  // Delete modal
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const openDeleteModal = () => {
+    setDeleteModalVisible(true);
+  };
+  const closeDeleteModal = () => {
+    setDeleteModalVisible(false);
+  };
+
+  // Log out
+  const handleLogOut = async () => {
     try {
       // Call Supabase's signOut method
       await supabase.auth.signOut();
@@ -44,7 +60,7 @@ const MeScreen = () => {
   };
 
   return (
-    <div className="bg-white w-[58vw] h-[75vh] flex flex-row justify-start gap-x-20 px-11 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
+    <div className="relative bg-white w-[58vw] h-[75vh] flex flex-row justify-between gap-x-20 px-11 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
       {/* Left */}
       <div className="flex flex-col justify-between">
         <>
@@ -68,7 +84,7 @@ const MeScreen = () => {
               </p>{" "}
               <button
                 onClick={() => {
-                  handleSignOut();
+                  handleLogOut();
                 }}
                 className="w-fit text-zinc-800 bg-zinc-200 hover:bg-zinc-300 transition-all px-2 rounded-lg font-medium select-none"
               >
@@ -126,8 +142,9 @@ const MeScreen = () => {
           <button className="w-full h-fit py-2 border-2 hover:bg-gray-200 bg-white text-black rounded-md font-medium transition-colors ">
             Export all lists
           </button>
+
           <button
-            onClick={() => handleDeleteAllLists()}
+            onClick={() => openDeleteModal()}
             className="w-full h-fit py-2 border-2 hover:border-red-500 hover:bg-red-500 bg-white text-black hover:text-white rounded-md font-medium transition-colors"
           >
             <span>Delete all lists</span>
@@ -135,50 +152,82 @@ const MeScreen = () => {
         </div>
       </div>
 
-      {deleteMessage}
+      <div className="self-center">{deleteMessage}</div>
 
       {/* Right */}
-      <div className="bg-zinc-200 h-full p-8 rounded-xl relative w-[18vw] text-black flex flex-col justify-start selection:bg-[#8fd2ff] selection:text-black overflow-y-auto custom-scrollbar">
-        <h2 className="text-xl font-semibold mb-4">About Taskify</h2>
-        <div className="flex flex-col gap-y-4">
-          <p className="text-md font-normal">
-            Taskify is an open-source to-do list app that allows users to create
-            and manage personal task lists. Users can create lists with an
-            ability to make them public to share with the community.
-          </p>
-          <p className="text-md font-normal">
-            The app allows users to discover public lists created by other
-            users, view their content, and interact with the community.
-          </p>
-          <p className="text-md font-normal">
-            The mobile app is built using Flutter, the web version is built
-            using NextJS / React. The whole project is open-source, and
-            available on GitHub.
-          </p>
-          <p className="text-md font-normal">
-            Developed by{" "}
-            <Link
-              target="_blank"
-              className="animate-fontWeightPulse2"
-              href={"https://github.com/xicko/"}
-            >
-              Dashnyam Batbayar
-            </Link>
-          </p>
-
-          <Link
-            className="w-fit"
-            target="_blank"
-            draggable="false"
-            href={"https://github.com/xicko/taskify"}
+      <Disclosure as="div" className="w-[18vw] h-fit transition-all rounded-xl">
+        <DisclosureButton className="w-full px-4 pt-4 text-left">
+          <h2 className="text-xl font-semibold border-b">About Taskify</h2>
+        </DisclosureButton>
+        <div className="overflow-hidden">
+          <DisclosurePanel
+            transition
+            className="px-4 pb-4 origin-top transition duration-200 ease-out data-[closed]:-translate-y-80 data-[closed]:opacity-0"
           >
-            <div className="flex flex-row w-fit justify-center items-center gap-x-2 text-black font-medium bg-zinc-300 hover:bg-zinc-200 transition-colors px-4 py-2 rounded-full">
-              <FaGithub />
-              <span>GitHub</span>
+            <div className="flex flex-col gap-y-4 py-1">
+              <p className="text-md font-normal">
+                Taskify is an open-source to-do list app that allows users to
+                create and manage personal task lists. Users can create lists
+                with an ability to make them public to share with the community.
+              </p>
+              <p className="text-md font-normal">
+                The app allows users to discover public lists created by other
+                users, view their content, and interact with the community.
+              </p>
+              <p className="text-md font-normal">
+                The mobile app is built using Flutter, the web version is built
+                using NextJS / React. The whole project is open-source, and
+                available on GitHub.
+              </p>
+              <p className="text-md font-normal">
+                Developed by{" "}
+                <Link
+                  target="_blank"
+                  className="animate-fontWeightPulse2"
+                  href={"https://github.com/xicko/"}
+                >
+                  Dashnyam Batbayar
+                </Link>
+              </p>
+
+              <Link
+                className="w-fit"
+                target="_blank"
+                draggable="false"
+                href={"https://github.com/xicko/taskify"}
+              >
+                <div className="flex flex-row w-fit justify-center items-center gap-x-2 text-black font-medium bg-zinc-300 hover:bg-zinc-200 transition-colors px-4 py-2 rounded-full">
+                  <FaGithub />
+                  <span>GitHub</span>
+                </div>
+              </Link>
             </div>
-          </Link>
+          </DisclosurePanel>
         </div>
-      </div>
+      </Disclosure>
+
+      {deleteModalVisible === true && (
+        <div className="absolute w-[58vw] h-[75vh] ">
+          <div className="flex justify-center items-center min-w-full min-h-full bg-black bg-opacity-40 z-10 -ml-11 -mt-8">
+            <div className="w-[20vw] h-fit bg-white px-8 py-6 rounded-2xl z-20">
+              <p className="text-xl font-medium pb-2">Confirm delete</p>
+              <p>
+                Are you sure you want to delete all your lists? This action
+                cannot be undone.
+              </p>
+              <div className="flex flex-row justify-end gap-x-4 mt-4">
+                <button onClick={() => closeDeleteModal()}>Cancel</button>
+                <button
+                  onClick={() => handleDeleteAllLists()}
+                  className="text-red-800"
+                >
+                  Delete
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 };
