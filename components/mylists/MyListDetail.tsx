@@ -5,6 +5,7 @@ import { isListDetailVisibleAtom } from "@/state/baseAtoms";
 import { listDetailAtom } from "@/state/listAtoms";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
+import { toast } from "sonner";
 
 const MyListDetail = () => {
   // Access the selected list
@@ -19,6 +20,7 @@ const MyListDetail = () => {
     if (list) {
       deleteList(list.id);
       setListDetailVisible(false);
+      toast("List deleted.");
     }
   };
 
@@ -97,25 +99,19 @@ const MyListDetail = () => {
 
       {deleteModalVisible === true && (
         <div
-          className={`absolute bg-black flex justify-center items-center bg-opacity-55 w-[36vw] h-[75vh] -ml-11 -my-8 z-50 transition ease-in-out duration-150 delay-75`}
+          className={`absolute bg-black flex justify-center items-center bg-opacity-40 w-[36vw] h-[75vh] -ml-11 -my-8 z-50`}
         >
-          <div className="bg-white rounded-xl p-6 w-96 shadow-lg space-y-4">
-            <h2 className="text-xl font-semibold text-gray-800">
+          <div className="bg-white rounded-xl p-6 w-96 space-y-4">
+            <h2 className="text-xl font-semibold">
               Are you sure you want to delete this list?
             </h2>
-            <p className="text-gray-600">This action cannot be undone.</p>
+            <p className="">This action cannot be undone.</p>
 
             <div className="flex justify-end space-x-4">
-              <button
-                className="px-4 py-2 bg-zinc-300 text-zinc-800 rounded-md hover:bg-zinc-400 transition-all"
-                onClick={() => closeDeleteModal()}
-              >
+              <button className="rounded-md" onClick={() => closeDeleteModal()}>
                 Cancel
               </button>
-              <button
-                className="px-4 py-2 bg-red-600 text-white rounded-md hover:bg-red-700 transition-all"
-                onClick={() => handleDelete()}
-              >
+              <button className="text-red-800" onClick={() => handleDelete()}>
                 Delete
               </button>
             </div>

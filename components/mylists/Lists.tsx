@@ -92,7 +92,7 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
           className="bg-white w-full h-[70.4vh] flex justify-center items-center text-center pl-5 pr-6 py-5 relative mt-[3px] rounded-[4px] select-none transition duration-150 ease-in-out"
         >
           <div className="flex flex-col justify-center gap-y-6 w-[14vw] -mt-[4.6vh]">
-            <div className="w-[260px] h-[260px]">
+            <div className="w-[260px] h-[260px] self-center">
               <Image src={"/vis1.webp"} alt={""} width={400} height={400} />
             </div>
             <p className="text-gray-800 font-medium text-2xl">
@@ -136,7 +136,10 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
         ))}
       </Scrollbar>
 
-      <div className="absolute right-8 bottom-6 bg-[#384d5f] p-1.5 bg-opacity-30 rounded-full shadow-[0_0px_30px_-15px_rgba(0,0,0,0.7)]">
+      <div
+        hidden
+        className="absolute right-8 bottom-6 bg-[#384d5f] p-1.5 bg-opacity-30 rounded-full shadow-[0_0px_30px_-15px_rgba(0,0,0,0.7)]"
+      >
         <button onClick={() => refreshListButton()}>
           <IoMdRefresh
             className={`${refreshAnim} w-10 h-10 mb-[-7px] fill-[#ffffff]`}

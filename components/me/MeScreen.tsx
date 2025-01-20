@@ -12,23 +12,33 @@ import {
   DisclosureButton,
   DisclosurePanel,
 } from "@headlessui/react";
+import { changeEmailAtom } from "@/state/methods/changeEmailAtom";
+import { useAtom } from "jotai";
+import { accountSettingsMessageAtom } from "@/state/baseAtoms";
+import { exportAllUserListsAtom } from "@/state/methods/exportAllUserLists";
+import { toast } from "sonner";
 
 const MeScreen = () => {
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
   const setUserEmail = useSetAtom(userEmailAtom);
 
+  // Settings Message Modal & State
+  const [settingsMessageModal, setSettingsMessageModal] = useState(false);
+  const [accountSettingsMessage, setAccountSettingsMessage] = useAtom(
+    accountSettingsMessageAtom
+  );
+  const closeSettingsMessage = () => {
+    setSettingsMessageModal(false);
+  };
+
   // For displaying user email address
   const userEmail = useAtomValue(userEmailAtom);
 
-  // For feedback text
-  const setStatus = useState<string | null>(null)[1];
-
   // Delete All User Lists
-  const [deleteMessage, setDeleteMessage] = useState("");
   const deleteAllLists = useSetAtom(deleteAllListsAtom);
   const handleDeleteAllLists = () => {
     deleteAllLists();
-    setDeleteMessage("All lists have been deleted");
+    toast("All lists have been deleted");
     setDeleteModalVisible(false);
   };
 
@@ -47,22 +57,47 @@ const MeScreen = () => {
       // Call Supabase's signOut method
       await supabase.auth.signOut();
 
-      // Update Jotai atoms to reflect the signed-out state
       setIsUserLoggedIn(false); // Set the user as not logged in
       setUserEmail(null); // Clear the stored email
 
-      console.log("User signed out successfully");
-      setStatus("Successfully logged out");
+      toast("Logged out");
     } catch (error) {
-      console.error("Error signing out:", error);
-      setStatus("Sign out unsuccessful");
+      console.log(error);
+      toast("Unable to log out");
     }
+  };
+
+  // Email change
+  const [email, setEmail] = useState(userEmail);
+  const changeEmail = useSetAtom(changeEmailAtom);
+  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+    setEmail(event.target.value);
+  };
+  const handleEmailChange = () => {
+    if (email != userEmail) {
+      changeEmail(email ?? userEmail ?? "");
+
+      setSettingsMessageModal(true);
+      setAccountSettingsMessage(
+        "Email change request sent, please check your inbox and confirm your new email."
+      );
+    } else {
+      toast("New email cannot be same as current email.");
+    }
+  };
+
+  // Export Lists as JSON
+  const exportAllUserLists = useSetAtom(exportAllUserListsAtom);
+  const handleExportLists = async () => {
+    toast("Exporting...");
+    await new Promise((resolve) => setTimeout(resolve, 600));
+    exportAllUserLists();
   };
 
   return (
     <div className="relative bg-white w-[58vw] h-[75vh] flex flex-row justify-between gap-x-20 px-11 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
       {/* Left */}
-      <div className="flex flex-col justify-between">
+      <div className="flex flex-col justify-start">
         <>
           <span className="font-semibold text-2xl select-none">
             Account Settings
@@ -101,13 +136,23 @@ const MeScreen = () => {
           <div className="flex flex-row justify-start">
             <Input
               className="w-full py-1 bg-transparent text-lg outline-none border-b-2 border-gray-200 focus:border-gray-600 transition-all"
-              placeholder="example@gmail.com"
+              placeholder="Email address"
+              value={email ?? ""}
+              onChange={handleChange}
+              id="email"
+              type="email"
             />
             <button
-              onClick={() => {}}
-              className="font-medium px-3  rounded-r-md"
+              onClick={() => handleEmailChange()}
+              className="font-medium px-3 rounded-r-md"
             >
-              <span className="bg-[#83ceff] bg-opacity-50 hover:bg-opacity-70 -ml-1 px-2 py-1 rounded-md transition-all">
+              <span
+                className={`${
+                  userEmail === email
+                    ? "bg-zinc-300 text-zinc-800"
+                    : "bg-[#83ceff] text-black"
+                } bg-opacity-50 hover:bg-opacity-70 -ml-1 px-2 py-1 rounded-md transition-all`}
+              >
                 Change
               </span>
             </button>
@@ -139,7 +184,10 @@ const MeScreen = () => {
         </div>
 
         <div className="flex flex-row justify-between gap-x-4 mb-2">
-          <button className="w-full h-fit py-2 border-2 hover:bg-gray-200 bg-white text-black rounded-md font-medium transition-colors ">
+          <button
+            onClick={() => handleExportLists()}
+            className="w-full h-fit py-2 border-2 hover:bg-gray-200 bg-white text-black rounded-md font-medium transition-colors "
+          >
             Export all lists
           </button>
 
@@ -152,10 +200,12 @@ const MeScreen = () => {
         </div>
       </div>
 
-      <div className="self-center">{deleteMessage}</div>
-
       {/* Right */}
-      <Disclosure as="div" className="w-[18vw] h-fit transition-all rounded-xl">
+      <Disclosure
+        as="div"
+        hidden
+        className="w-[18vw] h-fit transition-all rounded-xl"
+      >
         <DisclosureButton className="w-full px-4 pt-4 text-left">
           <h2 className="text-xl font-semibold border-b">About Taskify</h2>
         </DisclosureButton>
@@ -223,6 +273,28 @@ const MeScreen = () => {
                 >
                   Delete
                 </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      )}
+
+      {settingsMessageModal === true && (
+        <div className="absolute w-[58vw] h-[75vh] select-none">
+          <div
+            onClick={() => closeSettingsMessage()}
+            className="flex justify-center items-center min-w-full min-h-full bg-black bg-opacity-20 z-10 -ml-11 -mt-8"
+          >
+            <div
+              onClick={() => {}}
+              className="w-[24vw] h-fit bg-white px-8 py-6 text-black rounded-2xl z-20"
+            >
+              <p className="text-xl font-medium pb-2">
+                {accountSettingsMessage}
+              </p>
+
+              <div className="flex flex-row justify-center text-lg gap-x-4 mt-4">
+                <button onClick={() => closeSettingsMessage()}>Dismiss</button>
               </div>
             </div>
           </div>

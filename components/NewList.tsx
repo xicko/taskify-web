@@ -4,6 +4,7 @@ import { supabase } from "@/lib/supabaseClient";
 import { userEmailAtom, userIdAtom } from "@/state/authAtoms";
 import { useAtomValue, useSetAtom } from "jotai";
 import { fetchListsAtom } from "@/state/methods/fetchListsAtom";
+import { toast } from "sonner";
 
 const NewList = () => {
   // List
@@ -70,11 +71,13 @@ const NewList = () => {
     // Check if title or content is empty
     if (title.trim() === "" || content.trim() === "") {
       setErrorMessage("List cannot be empty");
+      toast("List cannot be empty.");
       setLoading(false);
       return;
     }
 
     createList(title, content, isPublic);
+    toast("List created.");
 
     // Refresh after creation
     setTimeout(() => {

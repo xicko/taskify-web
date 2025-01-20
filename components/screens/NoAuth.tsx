@@ -9,6 +9,7 @@ import { isUserLoggedInAtom, userEmailAtom } from "@/state/authAtoms";
 import Screenshots from "../Screenshots";
 import Link from "next/link";
 import { MdAndroid } from "react-icons/md";
+import { toast } from "sonner";
 
 const NoAuth = () => {
   // Controls login and signup screen index
@@ -39,6 +40,7 @@ const NoAuth = () => {
     } else {
       setIsUserLoggedIn(true);
       setUserEmail(session.user?.email ?? null);
+      toast("Logged in");
     }
   };
 
@@ -61,6 +63,7 @@ const NoAuth = () => {
     } else {
       setIsUserLoggedIn(true);
       setUserEmail(session.user?.email ?? null);
+      toast("Account created.");
     }
   };
 

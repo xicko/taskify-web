@@ -100,7 +100,10 @@ const Lists = ({
         ))}
       </Scrollbar>
 
-      <div className="absolute right-8 bottom-6 bg-[#5e5e5e] p-1.5 bg-opacity-50 rounded-full shadow-[0_0px_30px_-15px_rgba(0,0,0,0.7)]">
+      <div
+        hidden
+        className="absolute right-8 bottom-6 bg-[#5e5e5e] p-1.5 bg-opacity-50 rounded-full shadow-[0_0px_30px_-15px_rgba(0,0,0,0.7)]"
+      >
         <button onClick={() => refreshListButton()}>
           <IoMdRefresh
             className={`${refreshAnim} w-10 h-10 mb-[-7px] fill-[#ffffff]`}

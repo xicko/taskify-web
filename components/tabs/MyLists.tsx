@@ -7,7 +7,6 @@ import UserListScreen from "@/components/mylists/MyListScreen";
 const MyLists = () => {
   const isUserLoggedin = useAtomValue(isUserLoggedInAtom);
 
-  // const { openModal } = useModal();
   return (
     <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
       <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">

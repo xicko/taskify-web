@@ -5,10 +5,8 @@ import IsMobile from "@/components/IsMobile";
 
 import Discover from "@/components/tabs/Discover";
 import Me from "@/components/tabs/Me";
-import ModalRenderer from "@/components/ModalRenderer";
 import MyLists from "@/components/tabs/MyLists";
 import { NavBar } from "@/components/NavBar";
-import { ModalProvider } from "@/context/ModalContext";
 import React from "react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
@@ -22,6 +20,7 @@ import {
 import { navIndexAtom } from "@/state/baseAtoms";
 import Background from "@/components/Background";
 import SplashScreen from "@/components/SplashScreen";
+import { Toaster } from "@/components/ui/sonner";
 
 export default function Home() {
   const navIndex = useAtomValue(navIndexAtom);
@@ -78,27 +77,25 @@ export default function Home() {
     // If desktop
     return (
       <>
-        <ModalProvider>
-          <SplashScreen duration={200} />
-          <main className="h-[100dvh] flex items-center justify-center">
-            <div className="absolute -z-50 top-0 bottom-0 left-0 right-0">
-              <Background />
-            </div>
+        <SplashScreen duration={200} />
+        <main className="h-[100dvh] flex items-center justify-center">
+          <div className="absolute -z-50 top-0 bottom-0 left-0 right-0">
+            <Background />
+          </div>
 
-            <div className="relative min-w-[75vw] min-h-[85vh] flex flex-row rounded-[40px] shadow-2xl overflow-hidden">
-              <NavBar />
+          <div className="relative min-w-[75vw] min-h-[85vh] flex flex-row rounded-[40px] shadow-2xl overflow-hidden">
+            <NavBar />
 
-              <section>
-                <div>
-                  {navIndex === 0 && <MyLists />}
-                  {navIndex === 1 && <Discover />}
-                  {navIndex === 2 && <Me />}
-                </div>
-              </section>
-            </div>
-          </main>
-          <ModalRenderer />
-        </ModalProvider>
+            <section>
+              <div>
+                {navIndex === 0 && <MyLists />}
+                {navIndex === 1 && <Discover />}
+                {navIndex === 2 && <Me />}
+              </div>
+            </section>
+          </div>
+        </main>
+        <Toaster />
       </>
     );
   }
