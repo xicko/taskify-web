@@ -14,7 +14,10 @@ import {
 } from "@headlessui/react";
 import { changeEmailAtom } from "@/state/methods/changeEmailAtom";
 import { useAtom } from "jotai";
-import { accountSettingsMessageAtom } from "@/state/baseAtoms";
+import {
+  accountSettingsMessageAtom,
+  isListDetailVisibleAtom,
+} from "@/state/baseAtoms";
 import { exportAllUserListsAtom } from "@/state/methods/exportAllUserLists";
 import { toast } from "sonner";
 
@@ -36,10 +39,12 @@ const MeScreen = () => {
 
   // Delete All User Lists
   const deleteAllLists = useSetAtom(deleteAllListsAtom);
+  const setListDetailVisible = useSetAtom(isListDetailVisibleAtom);
   const handleDeleteAllLists = () => {
     deleteAllLists();
     toast("All lists have been deleted");
     setDeleteModalVisible(false);
+    setListDetailVisible(false);
   };
 
   // Delete modal

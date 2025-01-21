@@ -8,6 +8,7 @@ import { listsPublicAtom, loadingAtom } from "@/state/listAtoms";
 import { IoMdRefresh } from "react-icons/io";
 
 interface ListsType {
+  id: string;
   title: string;
   content: string;
   updated_at: string;
@@ -25,7 +26,8 @@ const Lists = ({
   const lists = useAtomValue(listsPublicAtom);
 
   const handleListClick = (list: ListsType) => {
-    onSelectList(list); // When a list is clicked, pass it to the parent
+    onSelectList(list);
+    window.history.pushState(null, "", `/?id=${list.id}`);
   };
 
   // Refresh Button

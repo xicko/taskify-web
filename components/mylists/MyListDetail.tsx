@@ -4,6 +4,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { isListDetailVisibleAtom } from "@/state/baseAtoms";
 import { listDetailAtom } from "@/state/listAtoms";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
+import { IoMdShare } from "react-icons/io";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
 import { toast } from "sonner";
 
@@ -35,6 +36,12 @@ const MyListDetail = () => {
     if (deleteModalVisible === true) {
       setDeleteModalVisible(false);
     }
+  };
+
+  const copyLink = () => {
+    const baseUrl = window.location.origin;
+    navigator.clipboard.writeText(`${baseUrl}/?id=${list?.id.toString()}`);
+    toast("Link copied to clipboard.");
   };
 
   if (!list) {
@@ -69,6 +76,17 @@ const MyListDetail = () => {
       </div>
 
       <div className="absolute bottom-8 right-8 flex space-x-2">
+        {/* Copy Button */}
+        <span
+          onClick={() => copyLink()}
+          className="cursor-pointer flex items-center px-3 py-2 hover:bg-zinc-200 rounded-md transition-all select-none"
+        >
+          <IoMdShare size={20} className="text-zinc-900 opacity-90" />
+          <span hidden className="text-red-600">
+            Delete
+          </span>
+        </span>
+
         {/* Delete Button */}
         <span
           onClick={() => openDeleteModal()}

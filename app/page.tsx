@@ -69,6 +69,7 @@ export default function Home() {
     };
   }, [setIsUserLoggedIn, setUserEmail, setUserId]);
 
+  // Query params
   const setNavIndex = useSetAtom(navIndexAtom);
   const fetchListView = useSetAtom(fetchListViewAtom);
   useEffect(() => {
@@ -85,7 +86,7 @@ export default function Home() {
   // If mobile
   if (isMobile) {
     return (
-      <div className="flex justify-center items-center dark:bg-zinc-900 dark:text-white w-screen h-[100dvh]">
+      <div className="flex justify-center items-center bg-white dark:bg-zinc-900 dark:text-white w-screen h-[100dvh]">
         <IsMobile />
       </div>
     );

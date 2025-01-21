@@ -1,5 +1,6 @@
 import { listViewAtom } from "@/state/listAtoms";
 import { useAtomValue } from "jotai";
+import Image from "next/image";
 import React from "react";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import ScrollBar from "react-scrollbars-custom";
@@ -11,8 +12,17 @@ const ViewList = () => {
     return (
       <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
         <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">
-          <div className="bg-white text-xl font-medium relative w-[58vw] h-[75vh] flex flex-col justify-center items-center pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
-            List is private or doesn&apos;t exist.
+          <div className="bg-white text-2xl font-medium relative w-[58vw] h-[75vh] flex flex-col justify-center items-center gap-y-8 pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
+            <div className="w-[16vw] h-auto">
+              <Image
+                src={"/404.webp"}
+                alt=""
+                width={1500}
+                height={700}
+                draggable={false}
+              />
+            </div>
+            <p>List is private or doesn&apos;t exist.</p>
           </div>
         </div>
       </div>

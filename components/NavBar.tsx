@@ -10,8 +10,12 @@ import { navIndexAtom } from "@/state/baseAtoms";
 export const NavBar = () => {
   const [navIndex, setNavIndex] = useAtom(navIndexAtom);
 
+  // Handle navbar index
   const handleNavigate = (index: number) => {
     setNavIndex(index);
+
+    // Clear url query param whenever navbarindex changes
+    window.history.replaceState(null, "", window.location.pathname);
   };
 
   return (

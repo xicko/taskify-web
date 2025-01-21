@@ -6,6 +6,7 @@ import { useAtomValue } from "jotai";
 import { listsPublicAtom } from "@/state/listAtoms";
 
 interface SelectedListDetail {
+  id: string;
   title: string;
   content: string;
   updated_at: string;
