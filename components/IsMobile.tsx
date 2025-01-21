@@ -6,7 +6,7 @@ import { MdAndroid } from "react-icons/md";
 const IsMobile = () => {
   return (
     <div className="flex flex-col gap-y-3 justify-center items-center">
-      <h1 className="self-center text-white select-none text-6xl transition-all animate-fontWeightPulse">
+      <h1 className="self-center text-black dark:text-white select-none text-6xl transition-all animate-fontWeightPulse">
         Taskify
       </h1>
       <div className="flex flex-col justify-center items-center gap-y-1">

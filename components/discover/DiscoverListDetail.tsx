@@ -9,7 +9,7 @@ interface MyListDetail {
   email: string;
 }
 
-const MyListDetail = ({ list }: { list: MyListDetail }) => {
+const DiscoverListDetail = ({ list }: { list: MyListDetail }) => {
   return (
     <div className="bg-white w-[36vw] h-[75vh] flex flex-col justify-between pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
       <h2 className="text-xl font-semibold mb-1">{list.title}</h2>
@@ -33,4 +33,4 @@ const MyListDetail = ({ list }: { list: MyListDetail }) => {
   );
 };
 
-export default MyListDetail;
+export default DiscoverListDetail;

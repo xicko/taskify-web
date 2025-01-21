@@ -25,3 +25,23 @@ export const listPublicDetailAtom = atom<null | {
 }>(null);
 
 export const listsPublicAtom = atom<any[]>([]);
+
+interface ListItem {
+  is_public: boolean;
+  id: string;
+  title: string;
+  content: string;
+  updated_at: string;
+  created_at: string;
+  email: string;
+}
+
+export const listViewAtom = atom<ListItem | null>({
+  is_public: false,
+  id: "",
+  title: "",
+  content: "",
+  updated_at: "",
+  created_at: "",
+  email: "",
+});

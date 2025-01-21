@@ -21,6 +21,8 @@ import { navIndexAtom } from "@/state/baseAtoms";
 import Background from "@/components/Background";
 import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/sonner";
+import ViewList from "@/components/tabs/ViewList";
+import { fetchListViewAtom } from "@/state/methods/fetchListViewAtom";
 
 export default function Home() {
   const navIndex = useAtomValue(navIndexAtom);
@@ -29,6 +31,7 @@ export default function Home() {
   const setUserEmail = useSetAtom(userEmailAtom);
   const setUserId = useSetAtom(userIdAtom);
 
+  // Auth init
   useEffect(() => {
     // Check initial session state
     const setInitialSession = async () => {
@@ -66,6 +69,19 @@ export default function Home() {
     };
   }, [setIsUserLoggedIn, setUserEmail, setUserId]);
 
+  const setNavIndex = useSetAtom(navIndexAtom);
+  const fetchListView = useSetAtom(fetchListViewAtom);
+  useEffect(() => {
+    // Read the query parameters
+    const searchParams = new URLSearchParams(window.location.search);
+    const idParam = searchParams.get("id");
+
+    if (idParam) {
+      setNavIndex(3);
+      fetchListView(idParam);
+    }
+  }, [setNavIndex, fetchListView]);
+
   // If mobile
   if (isMobile) {
     return (
@@ -91,6 +107,7 @@ export default function Home() {
                 {navIndex === 0 && <MyLists />}
                 {navIndex === 1 && <Discover />}
                 {navIndex === 2 && <Me />}
+                {navIndex === 3 && <ViewList />}
               </div>
             </section>
           </div>
