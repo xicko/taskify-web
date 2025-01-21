@@ -15,7 +15,7 @@ interface MyListDetail {
 const DiscoverListDetail = ({ list }: { list: MyListDetail }) => {
   const copyLink = () => {
     const baseUrl = window.location.origin;
-    navigator.clipboard.writeText(`${baseUrl}/?id=${list?.id.toString()}`);
+    navigator.clipboard.writeText(`${baseUrl}/?list=${list?.id.toString()}`);
     toast("Link copied to clipboard.");
   };
 

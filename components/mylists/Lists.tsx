@@ -36,7 +36,7 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
     setListDetail(list); // Set the clicked list detail to listDetailAtom
     setListDetailVisible(true); // Set list detail modal visibility true
 
-    window.history.pushState(null, "", `/?id=${list.id}`);
+    window.history.pushState(null, "", `/?list=${list.id}`);
   };
 
   // Refresh Button

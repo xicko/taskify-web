@@ -75,11 +75,11 @@ export default function Home() {
   useEffect(() => {
     // Read the query parameters
     const searchParams = new URLSearchParams(window.location.search);
-    const idParam = searchParams.get("id");
+    const listParam = searchParams.get("list");
 
-    if (idParam) {
+    if (listParam) {
       setNavIndex(3);
-      fetchListView(idParam);
+      fetchListView(listParam);
     }
   }, [setNavIndex, fetchListView]);
 

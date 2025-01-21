@@ -3,10 +3,18 @@ import { useAtomValue } from "jotai";
 import Image from "next/image";
 import React from "react";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
+import { IoMdShare } from "react-icons/io";
 import ScrollBar from "react-scrollbars-custom";
+import { toast } from "sonner";
 
 const ViewList = () => {
   const list = useAtomValue(listViewAtom);
+
+  const copyLink = () => {
+    const baseUrl = window.location.origin;
+    navigator.clipboard.writeText(`${baseUrl}/?list=${list?.id.toString()}`);
+    toast("Link copied to clipboard.");
+  };
 
   if (!list)
     return (
@@ -38,23 +46,37 @@ const ViewList = () => {
               <p className="whitespace-pre-line pr-20">{list.content}</p>
             </ScrollBar>
           </div>
-          <div className="flex flex-col mt-2">
-            {list.is_public ? (
+
+          <div className="flex flex-row justify-between items-end">
+            <div className="flex flex-col mt-2">
+              {list.is_public ? (
+                <span className="text-sm text-zinc-600">
+                  Shared by: {list.email.split("@")[0]}
+                </span>
+              ) : (
+                <span className="text-sm text-zinc-600">
+                  {list.is_public ? "Public" : "Private"}
+                </span>
+              )}
               <span className="text-sm text-zinc-600">
-                Shared by: {list.email.split("@")[0]}
+                Updated on:{" "}
+                {new Date(list.updated_at).toLocaleDateString("en-US")}
               </span>
-            ) : (
               <span className="text-sm text-zinc-600">
-                {list.is_public ? "Public" : "Private"}
+                Created on:{" "}
+                {new Date(list.created_at).toLocaleDateString("en-US")}
               </span>
-            )}
-            <span className="text-sm text-zinc-600">
-              Updated on:{" "}
-              {new Date(list.updated_at).toLocaleDateString("en-US")}
-            </span>
-            <span className="text-sm text-zinc-600">
-              Created on:{" "}
-              {new Date(list.created_at).toLocaleDateString("en-US")}
+            </div>
+
+            {/* Copy Button */}
+            <span
+              onClick={() => copyLink()}
+              className="cursor-pointer flex items-center px-3 py-3 mr-6 h-fit bg-zinc-100 hover:bg-zinc-200 rounded-md transition-all select-none"
+            >
+              <IoMdShare size={20} className="text-zinc-900 opacity-90" />
+              <span hidden className="text-red-600">
+                Copy
+              </span>
             </span>
           </div>
 

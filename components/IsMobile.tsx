@@ -13,15 +13,15 @@ const IsMobile = () => {
   // Query params
   const fetchListView = useSetAtom(fetchListViewAtom);
   const searchParams = new URLSearchParams(window.location.search);
-  const idParam = searchParams.get("id");
+  const listParam = searchParams.get("list");
   useEffect(() => {
     // Read the query parameters
-    if (idParam) {
-      fetchListView(idParam);
+    if (listParam) {
+      fetchListView(listParam);
     }
-  }, [fetchListView]);
+  }, [listParam, fetchListView]);
 
-  if (idParam)
+  if (listParam)
     return (
       <div className="absolute bg-zinc-100 p-8 rounded-xl w-[100dvw] h-[100dvh]">
         <div className="h-full flex flex-col justify-between selection:bg-[#8fd2ff] selection:text-black custom-scrollbar">

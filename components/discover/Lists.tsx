@@ -27,7 +27,7 @@ const Lists = ({
 
   const handleListClick = (list: ListsType) => {
     onSelectList(list);
-    window.history.pushState(null, "", `/?id=${list.id}`);
+    window.history.pushState(null, "", `/?list=${list.id}`);
   };
 
   // Refresh Button
