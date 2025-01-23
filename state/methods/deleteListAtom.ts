@@ -1,7 +1,12 @@
 // Main method to delete a list
 import { atom } from "jotai";
 import { supabase } from "@/lib/supabaseClient"; // Import supabase client
-import { listsAtom, loadingAtom, errorAtom } from "@/state/listAtoms"; // Import state atoms
+import {
+  listsAtom,
+  loadingAtom,
+  errorAtom,
+  listPublicDetailAtom,
+} from "@/state/listAtoms"; // Import state atoms
 import { isUserLoggedInAtom } from "@/state/authAtoms";
 import { listDetailAtom } from "@/state/listAtoms";
 
@@ -44,6 +49,7 @@ export const deleteListAtom = atom(null, async (get, set, listId: string) => {
       const selectedList = get(listDetailAtom);
       if (selectedList?.id === listId) {
         set(listDetailAtom, null); // Clear the selected list if it's the one being deleted
+        set(listPublicDetailAtom, null);
       }
     }
   } catch (e) {

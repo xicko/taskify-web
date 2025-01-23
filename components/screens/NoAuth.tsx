@@ -127,7 +127,7 @@ const NoAuth = () => {
                 <Link
                   className="font-medium hover:font-bold hover:scale-110 transition-all ease-in-out duration-500 text-[#23455c]"
                   href={"https://dl.dashnyam.com/taskify.apk"}
-                  target="_blank"
+                  download={true}
                 >
                   Get the app.
                 </Link>
@@ -197,7 +197,7 @@ const NoAuth = () => {
                 <Link
                   className="font-medium hover:font-bold hover:scale-110 transition-all ease-in-out duration-500 text-[#23455c]"
                   href={"https://dl.dashnyam.com/taskify.apk"}
-                  target="_blank"
+                  download={true}
                 >
                   Get the app.
                 </Link>

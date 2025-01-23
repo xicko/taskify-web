@@ -44,7 +44,10 @@ const IsMobile = () => {
               <h2 className="text-xl font-semibold mb-1">
                 {list?.title ?? "List is private or doesn't exist."}
               </h2>
-              <div className="whitespace-pre-line">{list?.content ?? ""}</div>
+
+              <div className="whitespace-pre-line max-h-[60dvh] overflow-y-auto">
+                {list?.content ?? ""}
+              </div>
             </div>
           </div>
 
@@ -60,11 +63,11 @@ const IsMobile = () => {
             )}
             <span className="text-sm text-zinc-700">
               Updated on:{" "}
-              {new Date(list?.updated_at ?? "").toLocaleDateString("en-US")}
+              {new Date(list?.updated_at ?? "").toLocaleString("en-US")}
             </span>
             <span className="text-sm text-zinc-700">
               Created on:{" "}
-              {new Date(list?.created_at ?? "").toLocaleDateString("en-US")}
+              {new Date(list?.created_at ?? "").toLocaleString("en-US")}
             </span>
           </div>
         </div>

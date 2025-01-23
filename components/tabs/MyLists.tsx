@@ -8,7 +8,7 @@ const MyLists = () => {
   const isUserLoggedin = useAtomValue(isUserLoggedInAtom);
 
   return (
-    <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
+    <div className="w-[63vw] h-[85vh] flex justify-center items-center">
       <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">
         {isUserLoggedin === true && <MyListScreen />}
 

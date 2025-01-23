@@ -18,7 +18,7 @@ const ViewList = () => {
 
   if (!list)
     return (
-      <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
+      <div className="w-[63vw] h-[85vh] flex justify-center items-center">
         <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">
           <div className="bg-white text-2xl font-medium relative w-[58vw] h-[75vh] flex flex-col justify-center items-center gap-y-8 pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
             <div className="w-[16vw] h-auto">
@@ -37,7 +37,7 @@ const ViewList = () => {
     );
 
   return (
-    <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
+    <div className="w-[63vw] h-[85vh] flex justify-center items-center">
       <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">
         <div className="bg-white relative w-[58vw] h-[75vh] flex flex-col justify-between pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
           <h2 className="text-xl font-semibold mb-1">{list.title}</h2>
@@ -59,12 +59,10 @@ const ViewList = () => {
                 </span>
               )}
               <span className="text-sm text-zinc-600">
-                Updated on:{" "}
-                {new Date(list.updated_at).toLocaleDateString("en-US")}
+                Updated on: {new Date(list.updated_at).toLocaleString("en-US")}
               </span>
               <span className="text-sm text-zinc-600">
-                Created on:{" "}
-                {new Date(list.created_at).toLocaleDateString("en-US")}
+                Created on: {new Date(list.created_at).toLocaleString("en-US")}
               </span>
             </div>
 

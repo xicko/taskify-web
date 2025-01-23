@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import ScrollBar from "react-scrollbars-custom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { isListDetailVisibleAtom } from "@/state/baseAtoms";
@@ -11,6 +11,23 @@ import { toast } from "sonner";
 const MyListDetail = () => {
   // Access the selected list
   const list = useAtomValue(listDetailAtom);
+  const [listDetail, setListDetail] = useState(list);
+
+  // Fade Anim
+  const [isFading, setIsFading] = useState(false);
+  useEffect(() => {
+    if (listDetail !== list) {
+      setIsFading(true);
+
+      // Delay list update
+      const timeout = setTimeout(() => {
+        setListDetail(list);
+        setIsFading(false);
+      }, 100);
+
+      return () => clearTimeout(timeout);
+    }
+  }, [list, listDetail]);
 
   // Method to toggle newlistmodal
   const setListDetailVisible = useSetAtom(isListDetailVisibleAtom);
@@ -22,6 +39,7 @@ const MyListDetail = () => {
       deleteList(list.id);
       setListDetailVisible(false);
       toast("List deleted.");
+      window.history.replaceState(null, "", window.location.pathname);
     }
   };
 
@@ -44,7 +62,7 @@ const MyListDetail = () => {
     toast("Link copied to clipboard.");
   };
 
-  if (!list) {
+  if (!listDetail) {
     // Handle the case when no list is selected
     return (
       <div className="w-[36vw] h-[75vh] pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl bg-white overflow-y-auto custom-scrollbar flex items-center justify-center">
@@ -56,28 +74,48 @@ const MyListDetail = () => {
   }
 
   return (
-    <div className="bg-white relative w-[36vw] h-[75vh] flex flex-col justify-between pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
-      <h2 className="text-xl font-semibold mb-1">{list.title}</h2>
+    <section className="bg-white relative w-[36vw] h-[75vh] flex flex-col justify-between pl-11 pr-2 py-8 selection:bg-[#8fd2ff] selection:text-black rounded-2xl overflow-y-auto custom-scrollbar">
+      <h2
+        className={`text-xl font-semibold mb-1 transition-opacity ease-in-out ${
+          isFading ? "opacity-0" : "opacity-100"
+        }`}
+      >
+        {listDetail.title}
+      </h2>
       <div className="h-full">
         <ScrollBar disableTracksWidthCompensation>
-          <p className="whitespace-pre-line pr-20">{list.content}</p>
+          <p
+            className={`whitespace-pre-line pr-20 transition-opacity ease-in-out ${
+              isFading ? "opacity-0" : "opacity-100"
+            }`}
+          >
+            {listDetail.content}
+          </p>
         </ScrollBar>
       </div>
-      <div className="flex flex-col mt-2">
+      <div
+        className={`flex flex-col mt-2 transition-opacity ease-in-out ${
+          isFading ? "opacity-0" : "opacity-100"
+        }`}
+      >
         <span className="text-sm text-zinc-600">
-          {list.is_public ? "Public" : "Private"}
+          {listDetail.is_public ? "Public" : "Private"}
         </span>
         <span className="text-sm text-zinc-600">
-          Updated on: {new Date(list.updated_at).toLocaleDateString("en-US")}
+          Updated on: {new Date(listDetail.updated_at).toLocaleString("en-US")}
         </span>
         <span className="text-sm text-zinc-600">
-          Created on: {new Date(list.created_at).toLocaleDateString("en-US")}
+          Created on: {new Date(listDetail.created_at).toLocaleString("en-US")}
         </span>
       </div>
 
-      <div className="absolute bottom-8 right-8 flex space-x-2">
+      <div
+        className={`absolute bottom-8 right-8 flex space-x-2 transition-opacity ease-in-out ${
+          isFading ? "opacity-0" : "opacity-100"
+        }`}
+      >
         {/* Copy Button */}
-        <span
+        <button
           onClick={() => copyLink()}
           className="cursor-pointer flex items-center px-3 py-2 hover:bg-zinc-200 rounded-md transition-all select-none"
         >
@@ -85,34 +123,34 @@ const MyListDetail = () => {
           <span hidden className="text-red-600">
             Delete
           </span>
-        </span>
+        </button>
 
         {/* Delete Button */}
-        <span
+        <button
           onClick={() => openDeleteModal()}
           className="cursor-pointer flex items-center px-3 py-2 hover:bg-red-50 rounded-md transition-all select-none"
         >
           <FaTrashAlt size={14} className="mr-2 text-red-700 opacity-90" />
           <span className="text-red-600">Delete</span>
-        </span>
+        </button>
 
         {/* Edit Button */}
-        <span
+        <button
           onClick={() => {}}
           className="cursor-pointer flex items-center px-3 py-2 hover:bg-sky-50 rounded-md transition-all select-none"
         >
           <FaEdit size={16} className="mr-2 text-sky-700" />
           <span className="text-sky-600">Edit</span>
-        </span>
+        </button>
 
         {/* Close Button */}
-        <span
+        <button
           onClick={() => setListDetailVisible(false)}
           className="cursor-pointer flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-all select-none"
         >
           <FaTimes className="mr-2 text-gray-700" />
           <span className="text-gray-800">Close</span>
-        </span>
+        </button>
       </div>
 
       {deleteModalVisible === true && (
@@ -136,7 +174,7 @@ const MyListDetail = () => {
           </div>
         </div>
       )}
-    </div>
+    </section>
   );
 };
 

@@ -4,15 +4,23 @@ import React from "react";
 import Image from "next/image";
 import Link from "next/link";
 import Icons from "@/components/Icons";
-import { useAtom } from "jotai";
-import { navIndexAtom } from "@/state/baseAtoms";
+import { useAtom, useSetAtom } from "jotai";
+import { fadeKeyAtom, isFadingAtom, navIndexAtom } from "@/state/baseAtoms";
 
 export const NavBar = () => {
   const [navIndex, setNavIndex] = useAtom(navIndexAtom);
+  const setFadeKey = useSetAtom(fadeKeyAtom); // Tracks the active content
+  const setIsFading = useSetAtom(isFadingAtom); // Animation control
 
   // Handle navbar index
   const handleNavigate = (index: number) => {
-    setNavIndex(index);
+    if (index === navIndex) return;
+    setIsFading(true);
+    setTimeout(() => {
+      setFadeKey(index);
+      setNavIndex(index);
+      setIsFading(false);
+    }, 300);
 
     // Clear url query param whenever navbarindex changes
     window.history.replaceState(null, "", window.location.pathname);

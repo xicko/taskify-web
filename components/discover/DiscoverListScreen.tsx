@@ -7,6 +7,7 @@ import { listsPublicAtom } from "@/state/listAtoms";
 
 interface SelectedListDetail {
   id: string;
+  user_id: string;
   title: string;
   content: string;
   updated_at: string;

@@ -17,15 +17,20 @@ import {
   userEmailAtom,
   userIdAtom,
 } from "@/state/authAtoms";
-import { navIndexAtom } from "@/state/baseAtoms";
+import { fadeKeyAtom, isFadingAtom, navIndexAtom } from "@/state/baseAtoms";
 import Background from "@/components/Background";
 import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/sonner";
 import ViewList from "@/components/tabs/ViewList";
 import { fetchListViewAtom } from "@/state/methods/fetchListViewAtom";
 
+// Tabs
+const tabs = [<MyLists key="0" />, <Discover key="1" />, <Me key="2" />];
+
 export default function Home() {
   const navIndex = useAtomValue(navIndexAtom);
+  const fadeKey = useAtomValue(fadeKeyAtom); // Tracks the active tab
+  const isFading = useAtomValue(isFadingAtom); // Animation control
 
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
   const setUserEmail = useSetAtom(userEmailAtom);
@@ -103,11 +108,14 @@ export default function Home() {
           <div className="relative min-w-[75vw] min-h-[85vh] flex flex-row rounded-[40px] shadow-2xl overflow-hidden">
             <NavBar />
 
-            <section>
-              <div>
-                {navIndex === 0 && <MyLists />}
-                {navIndex === 1 && <Discover />}
-                {navIndex === 2 && <Me />}
+            {/* Main */}
+            <section className="bg-[#8fd2ff] bg-opacity-60 ">
+              <div
+                className={`transition-opacity duration-700 ease-in-out ${
+                  isFading ? "opacity-0" : "opacity-100"
+                }`}
+              >
+                {navIndex < 3 && tabs[fadeKey]}
                 {navIndex === 3 && <ViewList />}
               </div>
             </section>

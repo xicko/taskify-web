@@ -10,8 +10,8 @@ const Me = () => {
   // Showing login screen if not logged in
   if (isUserLoggedIn === false)
     return (
-      <div className="w-[63vw] h-[85vh] flex justify-center items-center bg-[#8fd2ff] bg-opacity-60">
-        <div className="relative w-[58vw] h-[75vh] flex flex-row justify-between rounded-2xl overflow-hidden">
+      <div className="w-[63vw] h-[85vh] flex justify-center items-center ">
+        <div className="relative w-[58vw] h-[75vh] flex rounded-2xl overflow-hidden">
           <NoAuth />
         </div>
       </div>
@@ -19,7 +19,7 @@ const Me = () => {
 
   // Main
   return (
-    <div className="w-[63vw] h-[85vh] bg-[#8fd2ff] bg-opacity-60 p-12 shadow-lg flex flex-row justify-between items-start">
+    <div className="w-[63vw] h-[85vh] p-12 shadow-lg flex justify-center items-center">
       <MeScreen />
     </div>
   );
