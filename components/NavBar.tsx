@@ -20,7 +20,7 @@ export const NavBar = () => {
       setFadeKey(index);
       setNavIndex(index);
       setIsFading(false);
-    }, 300);
+    }, 200);
 
     // Clear url query param whenever navbarindex changes
     window.history.replaceState(null, "", window.location.pathname);

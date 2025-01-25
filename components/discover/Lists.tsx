@@ -1,5 +1,4 @@
 import React, { useEffect, useState } from "react";
-import skeletonList from "@/public/dummylist.json";
 import Icons from "@/components/Icons";
 import { Scrollbar } from "react-scrollbars-custom";
 import { useAtomValue, useSetAtom } from "jotai";
@@ -45,39 +44,16 @@ const Lists = ({
     setFetchPublicLists(); // Trigger fetching lists
   }, [setFetchPublicLists]);
 
-  // Skeleton List
-  if (loading)
-    return (
-      <div className="w-[20vw] h-[70.4vh] bg-[#8fd2ff] bg-opacity-0 rounded-b-2xl overflow-hidden overflow-y-auto custom-scrollbar">
-        <div>
-          {skeletonList.map((item, index) => (
-            <div
-              key={index}
-              className="bg-white w-full flex flex-col pl-5 pr-6 py-5 relative mt-[3px] rounded-[4px] select-none"
-            >
-              <span className="opacity-0 w-[13vw] text-black text-lg font-semibold">
-                {item.title}
-              </span>
-              <span className="opacity-0 flex flex-row gap-x-1 text-zinc-700 text-sm my-2 justify-start">
-                {Icons.ListPerson}
-                {item.email.split("@")}
-              </span>
-              <span className="opacity-0 text-zinc-700 text-md">
-                {item.content}
-              </span>
-              <span className="opacity-0 text-zinc-500 text-sm absolute top-5 right-7">
-                {item.date}
-              </span>
-            </div>
-          ))}
-        </div>
-      </div>
-    );
-
   // Main UI
   return (
     <div className="relative w-[20vw] h-[70.4vh] bg-[#8fd2ff] bg-opacity-0 rounded-b-2xl overflow-hidden overflow-y-auto custom-scrollbar">
-      <Scrollbar disableTracksWidthCompensation style={{}}>
+      <Scrollbar
+        className={`${
+          loading ? "opacity-0" : "opacity-100"
+        } transition-opacity duration-500 ease-in-out`}
+        disableTracksWidthCompensation
+        style={{}}
+      >
         {lists.map((item, index) => (
           <div
             key={index}

@@ -111,7 +111,7 @@ export default function Home() {
             {/* Main */}
             <section className="bg-[#8fd2ff] bg-opacity-60 ">
               <div
-                className={`transition-opacity duration-700 ease-in-out ${
+                className={`transition-opacity duration-500 ease-in-out ${
                   isFading ? "opacity-0" : "opacity-100"
                 }`}
               >
