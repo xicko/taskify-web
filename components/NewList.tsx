@@ -91,6 +91,7 @@ const NewList = () => {
         <Input
           value={title}
           required
+          maxLength={100}
           onChange={(e) => setTitle(e.target.value)}
           placeholder="Title"
           className="bg-transparent h-fit text-xl font-medium placeholder-gray-500 border-slate-200 border-b-[1px] focus:border-slate-400 focus:border-b-[2px] resize-none outline-none transition-all"

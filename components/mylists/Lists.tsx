@@ -98,7 +98,7 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
               index === lists.length - 1 ? `rounded-b-2xl` : `rounded-b-[4px]`
             } rounded-t-[4px] bg-white hover:bg-slate-200 w-full flex flex-col cursor-pointer pl-5 pr-6 py-5 relative mt-[3px] select-none transition duration-150 ease-in-out`}
           >
-            <span className="w-[13vw] text-black text-lg font-semibold">
+            <span className="w-[13vw] text-black text-lg font-semibold line-clamp-3 text-ellipsis">
               {item.title}
             </span>
             <span className="flex flex-row gap-x-1 text-zinc-700 text-sm my-2 justify-start items-center">
