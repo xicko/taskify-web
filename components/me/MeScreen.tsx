@@ -1,7 +1,12 @@
 import React, { useState } from "react";
 import Image from "next/image";
 import { useAtomValue, useSetAtom } from "jotai";
-import { isUserLoggedInAtom, userEmailAtom } from "@/state/authAtoms";
+import {
+  hasProfilePicAtom,
+  isUserLoggedInAtom,
+  userEmailAtom,
+  userPfpAtom,
+} from "@/state/authAtoms";
 import { deleteAllListsAtom } from "@/state/methods/deleteAllListsAtom";
 import { supabase } from "@/lib/supabaseClient";
 import { Input } from "@headlessui/react";
@@ -24,6 +29,7 @@ import { toast } from "sonner";
 const MeScreen = () => {
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
   const setUserEmail = useSetAtom(userEmailAtom);
+  const hasProfilePic = useAtomValue(hasProfilePicAtom);
 
   // Settings Message Modal & State
   const [settingsMessageModal, setSettingsMessageModal] = useState(false);
@@ -33,6 +39,9 @@ const MeScreen = () => {
   const closeSettingsMessage = () => {
     setSettingsMessageModal(false);
   };
+
+  // For displaying user profile picture
+  const userPfp = useAtomValue(userPfpAtom);
 
   // For displaying user email address
   const userEmail = useAtomValue(userEmailAtom);
@@ -108,9 +117,13 @@ const MeScreen = () => {
             Account Settings
           </span>
           <div className="flex items-center my-6">
-            <div className="w-[100px] h-[100px] overflow-hidden rounded-full flex justify-center items-center mr-6">
+            <div className="w-[120px] h-[120px] overflow-hidden rounded-md flex justify-center items-center mr-6">
               <Image
-                src={"/avatarrnd.webp"}
+                src={
+                  hasProfilePic
+                    ? `data:image/jpeg;base64,${userPfp}`
+                    : "/avatar.webp"
+                }
                 alt="Avatar"
                 draggable={false}
                 width={200}

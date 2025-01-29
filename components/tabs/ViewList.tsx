@@ -1,7 +1,9 @@
+import { listPfpAtom } from "@/state/authAtoms";
 import { listViewAtom } from "@/state/listAtoms";
-import { useAtomValue } from "jotai";
+import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
+import { useAtomValue, useSetAtom } from "jotai";
 import Image from "next/image";
-import React from "react";
+import React, { useEffect } from "react";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import ScrollBar from "react-scrollbars-custom";
@@ -10,11 +12,20 @@ import { toast } from "sonner";
 const ViewList = () => {
   const list = useAtomValue(listViewAtom);
 
+  // Profile picture
+  const fetchPfp = useSetAtom(fetchPfpAtom);
+  const listPfp = useAtomValue(listPfpAtom);
+
   const copyLink = () => {
     const baseUrl = window.location.origin;
     navigator.clipboard.writeText(`${baseUrl}/?list=${list?.id.toString()}`);
     toast("Link copied to clipboard.");
   };
+
+  useEffect(() => {
+    // Fetch profile picture with given user_id
+    fetchPfp(list?.user_id ?? "");
+  });
 
   if (!list)
     return (
@@ -49,21 +60,33 @@ const ViewList = () => {
 
           <div className="flex flex-row justify-between items-end">
             <div className="flex flex-col mt-2">
-              {list.is_public ? (
-                <span className="text-sm text-zinc-600">
-                  Shared by: {list.email.split("@")[0]}
-                </span>
-              ) : (
-                <span className="text-sm text-zinc-600">
-                  {list.is_public ? "Public" : "Private"}
-                </span>
-              )}
-              <span className="text-sm text-zinc-600">
+              <p className="text-sm text-zinc-600">
                 Updated on: {new Date(list.updated_at).toLocaleString("en-US")}
-              </span>
-              <span className="text-sm text-zinc-600">
+              </p>
+              <p className="text-sm text-zinc-600">
                 Created on: {new Date(list.created_at).toLocaleString("en-US")}
-              </span>
+              </p>
+
+              <div className="flex flex-row justify-start items-center font-medium gap-x-2 mt-2 select-none">
+                <Image
+                  src={listPfp ?? "/avatar.webp"}
+                  alt={`${list.email.split("@")[0]}`}
+                  className="rounded-sm"
+                  draggable={false}
+                  width={30}
+                  height={30}
+                />
+
+                {list.is_public ? (
+                  <p className="text-md text-zinc-800">
+                    {list.email.split("@")[0]}
+                  </p>
+                ) : (
+                  <p className="text-md text-zinc-800">
+                    {list.is_public ? "Public" : "Private"}
+                  </p>
+                )}
+              </div>
             </div>
 
             {/* Copy Button */}
@@ -72,9 +95,9 @@ const ViewList = () => {
               className="cursor-pointer flex items-center px-3 py-3 mr-6 h-fit bg-zinc-100 hover:bg-zinc-200 rounded-md transition-all select-none"
             >
               <IoMdShare size={20} className="text-zinc-900 opacity-90" />
-              <span hidden className="text-red-600">
+              <p hidden className="text-red-600">
                 Copy
-              </span>
+              </p>
             </span>
           </div>
 
@@ -85,7 +108,7 @@ const ViewList = () => {
               className="cursor-pointer flex items-center px-3 py-2 hover:bg-red-50 rounded-md transition-all select-none"
             >
               <FaTrashAlt size={14} className="mr-2 text-red-700 opacity-90" />
-              <span className="text-red-600">Delete</span>
+              <p className="text-red-600">Delete</p>
             </span>
 
             {/* Edit Button */}
@@ -94,7 +117,7 @@ const ViewList = () => {
               className="cursor-pointer flex items-center px-3 py-2 hover:bg-sky-50 rounded-md transition-all select-none"
             >
               <FaEdit size={16} className="mr-2 text-sky-700" />
-              <span className="text-sky-600">Edit</span>
+              <p className="text-sky-600">Edit</p>
             </span>
 
             {/* Close Button */}
@@ -103,7 +126,7 @@ const ViewList = () => {
               className="cursor-pointer flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-all select-none"
             >
               <FaTimes className="mr-2 text-gray-700" />
-              <span className="text-gray-800">Close</span>
+              <p className="text-gray-800">Close</p>
             </span>
           </div>
         </div>

@@ -1,10 +1,11 @@
-import React, { useEffect, useState } from "react";
-import Icons from "@/components/Icons";
+import React, { useEffect, useRef, useState } from "react";
 import { Scrollbar } from "react-scrollbars-custom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { fetchPublicListsAtom } from "@/state/methods/fetchPublicListsAtom";
 import { listsPublicAtom, loadingAtom } from "@/state/listAtoms";
 import { IoMdRefresh } from "react-icons/io";
+import { fetchUsersPfpAtom } from "@/state/methods/fetchUsersPfpAtom";
+import Image from "next/image";
 
 interface ListsType {
   id: string;
@@ -25,8 +26,17 @@ const Lists = ({
   const setFetchPublicLists = useSetAtom(fetchPublicListsAtom);
   const lists = useAtomValue(listsPublicAtom);
 
+  // Fetch users profile pictures
+  const fetchUsersPfp = useSetAtom(fetchUsersPfpAtom); // Method to fetch pfp based on user_id
+  const [pfps, setPfps] = useState<Record<string, string>>({}); // Stores fetched user_id as key, and returns the base64 as string
+  const fetchedUserIds = useRef(new Set<string>()); // Store fetched user ids
+
+  // List click
   const handleListClick = (list: ListsType) => {
+    // Passes selected list to parent
     onSelectList(list);
+
+    // Sets url with list id as parameter
     window.history.pushState(null, "", `/?list=${list.id}`);
   };
 
@@ -39,10 +49,45 @@ const Lists = ({
     setRefreshAnim("");
   };
 
-  // Trigger fetch when the component mounts or the login state changes
+  // Triggers when the component mounts or the login state changes
   useEffect(() => {
     setFetchPublicLists(); // Trigger fetching lists
   }, [setFetchPublicLists]);
+
+  useEffect(() => {
+    const fetchProfilePictures = async () => {
+      // Empty object to store new profile pictures
+      const newPfps: Record<string, string> = {};
+
+      // Map through each item in the 'lists' to fetch the profile pictures
+      const fetchPromises = lists.map(async (item) => {
+        // Checks if pfps and fetchedUserIds dont contain the user id
+        if (!pfps[item.user_id] && !fetchedUserIds.current.has(item.user_id)) {
+          // Mark this user ID as already fetched to avoid redundant requests
+          fetchedUserIds.current.add(item.user_id);
+
+          // Fetch the profile picture (base64) for the current user
+          const base64Pfp = await fetchUsersPfp(item.user_id);
+
+          // If a profile picture is fetched, store in newPfps
+          if (base64Pfp) {
+            newPfps[item.user_id] = base64Pfp;
+          }
+        }
+      });
+
+      // Wait for all fetches to complete
+      await Promise.all(fetchPromises);
+
+      // Update pfps if newPfps contains new profile pictures
+      if (Object.keys(newPfps).length > 0) {
+        // Merge new PFPs with the previous ones
+        setPfps((prev) => ({ ...prev, ...newPfps }));
+      }
+    };
+
+    fetchProfilePictures(); // Trigger fetching of profile pictures
+  });
 
   // Main UI
   return (
@@ -63,9 +108,20 @@ const Lists = ({
             <span className="w-[13vw] text-black text-lg font-semibold">
               {item.title}
             </span>
-            <span className="flex flex-row gap-x-1 text-zinc-700 text-sm my-2 justify-start">
-              {Icons.ListPerson}
-              {item.email.split("@")[0]}
+            <span className="flex flex-row gap-x-2 text-zinc-700 text-sm my-2 justify-start items-center">
+              <Image
+                src={
+                  Object.keys(pfps).length === 0
+                    ? "/avatar.webp"
+                    : `${pfps[item.user_id]}`
+                }
+                draggable={false}
+                alt="Profile picture"
+                className="rounded-sm"
+                width={24}
+                height={24}
+              />
+              <p>{item.email.split("@")[0]}</p>
             </span>
             <span className="text-zinc-700 text-md whitespace-pre-line line-clamp-4 text-ellipsis overflow-hidden">
               {item.content}

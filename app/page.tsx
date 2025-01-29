@@ -13,9 +13,11 @@ import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
 import { useSetAtom } from "jotai";
 import {
+  hasProfilePicAtom,
   isUserLoggedInAtom,
   userEmailAtom,
   userIdAtom,
+  userPfpAtom,
 } from "@/state/authAtoms";
 import { fadeKeyAtom, isFadingAtom, navIndexAtom } from "@/state/baseAtoms";
 import Background from "@/components/Background";
@@ -23,6 +25,7 @@ import SplashScreen from "@/components/SplashScreen";
 import { Toaster } from "@/components/ui/sonner";
 import ViewList from "@/components/tabs/ViewList";
 import { fetchListViewAtom } from "@/state/methods/fetchListViewAtom";
+import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
 
 // Tabs
 const tabs = [<MyLists key="0" />, <Discover key="1" />, <Me key="2" />];
@@ -35,6 +38,10 @@ export default function Home() {
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
   const setUserEmail = useSetAtom(userEmailAtom);
   const setUserId = useSetAtom(userIdAtom);
+  const setUserPfp = useSetAtom(userPfpAtom);
+  const setHasProfilePic = useSetAtom(hasProfilePicAtom);
+
+  const fetchPfp = useSetAtom(fetchPfpAtom);
 
   // Auth init
   useEffect(() => {
@@ -45,10 +52,14 @@ export default function Home() {
         setIsUserLoggedIn(true);
         setUserEmail(data.session?.user?.email ?? null);
         setUserId(data.session?.user?.id ?? null);
+        fetchPfp();
+        setHasProfilePic(true);
       } else {
         setIsUserLoggedIn(false);
         setUserEmail(null);
         setUserId(null);
+        setUserPfp("");
+        setHasProfilePic(false);
       }
     };
 
@@ -61,10 +72,14 @@ export default function Home() {
           setIsUserLoggedIn(true);
           setUserEmail(session.user.email ?? null);
           setUserId(session.user.id ?? null);
+          fetchPfp();
+          setHasProfilePic(true);
         } else if (event === "SIGNED_OUT") {
           setIsUserLoggedIn(false);
           setUserEmail(null);
           setUserId(null);
+          setUserPfp("");
+          setHasProfilePic(false);
         }
       }
     );
@@ -72,7 +87,14 @@ export default function Home() {
     return () => {
       authListener?.subscription.unsubscribe();
     };
-  }, [setIsUserLoggedIn, setUserEmail, setUserId]);
+  }, [
+    setIsUserLoggedIn,
+    setUserEmail,
+    setUserId,
+    fetchPfp,
+    setUserPfp,
+    setHasProfilePic,
+  ]);
 
   // Query params
   const setNavIndex = useSetAtom(navIndexAtom);

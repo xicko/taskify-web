@@ -6,9 +6,19 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { fetchListViewAtom } from "@/state/methods/fetchListViewAtom";
 import { listViewAtom } from "@/state/listAtoms";
 import Image from "next/image";
+import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
+import { listPfpAtom } from "@/state/authAtoms";
 
 const IsMobile = () => {
   const list = useAtomValue(listViewAtom);
+
+  // Profile picture
+  const fetchPfp = useSetAtom(fetchPfpAtom);
+  const listPfp = useAtomValue(listPfpAtom);
+  useEffect(() => {
+    // Fetch profile picture with given user_id
+    fetchPfp(list?.user_id ?? "");
+  });
 
   // Query params
   const fetchListView = useSetAtom(fetchListViewAtom);
@@ -52,15 +62,26 @@ const IsMobile = () => {
           </div>
 
           <div className="flex flex-col mt-2">
-            {list?.is_public ? (
-              <span className="text-sm text-zinc-700">
-                Shared by: {list.email.split("@")[0]}
-              </span>
-            ) : (
-              <span className="text-sm text-zinc-700">
-                {list?.is_public ? "Public" : "Private"}
-              </span>
-            )}
+            <div className="flex flex-row justify-start items-center font-medium gap-x-2 mb-2 select-none">
+              <Image
+                src={listPfp ?? "/avatar.webp"}
+                alt={`${list?.email.split("@")[0]}`}
+                className="rounded-sm"
+                draggable={false}
+                width={30}
+                height={30}
+              />
+
+              {list?.is_public ? (
+                <p className="text-md text-zinc-800">
+                  {list?.email.split("@")[0]}
+                </p>
+              ) : (
+                <p className="text-md text-zinc-800">
+                  {list?.is_public ? "Public" : "Private"}
+                </p>
+              )}
+            </div>
             <span className="text-sm text-zinc-700">
               Updated on:{" "}
               {new Date(list?.updated_at ?? "").toLocaleString("en-US")}

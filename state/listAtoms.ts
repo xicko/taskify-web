@@ -29,6 +29,7 @@ export const listsPublicAtom = atom<any[]>([]);
 interface ListItem {
   is_public: boolean;
   id: string;
+  user_id: string;
   title: string;
   content: string;
   updated_at: string;
@@ -39,6 +40,7 @@ interface ListItem {
 export const listViewAtom = atom<ListItem | null>({
   is_public: false,
   id: "",
+  user_id: "",
   title: "",
   content: "",
   updated_at: "",

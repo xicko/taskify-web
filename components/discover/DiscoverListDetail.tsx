@@ -3,9 +3,11 @@ import { FaEdit, FaTrashAlt } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import ScrollBar from "react-scrollbars-custom";
 import { toast } from "sonner";
-import { userIdAtom } from "@/state/authAtoms";
+import { listPfpAtom, userIdAtom } from "@/state/authAtoms";
 import { useAtomValue, useSetAtom } from "jotai";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
+import Image from "next/image";
+import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
 
 interface DiscoverListDetail {
   id: string;
@@ -19,6 +21,10 @@ interface DiscoverListDetail {
 
 const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
   const userId = useAtomValue(userIdAtom);
+
+  // Profile picture
+  const fetchPfp = useSetAtom(fetchPfpAtom);
+  const listPfp = useAtomValue(listPfpAtom);
 
   // Setting listDetail from given prop
   const [listDetail, setListDetail] = useState<DiscoverListDetail>(list);
@@ -36,7 +42,10 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
 
       return () => clearTimeout(timeout);
     }
-  }, [list, listDetail]);
+
+    // Fetch profile picture with given user_id
+    fetchPfp(listDetail.user_id ?? "");
+  }, [list, listDetail, fetchPfp]);
 
   // Method to delete current list
   const deleteList = useSetAtom(deleteListAtom);
@@ -95,19 +104,29 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
         }`}
       >
         <div className={`flex flex-col mt-2`}>
-          {list.user_id != userId && (
-            <span className="text-sm text-zinc-600">
-              Shared by: {listDetail.email.split("@")[0]}
-            </span>
-          )}
-          <span className="text-sm text-zinc-600">
+          <p className="text-sm text-zinc-600">
             Updated on:{" "}
             {new Date(listDetail.updated_at).toLocaleString("en-US")}
-          </span>
-          <span className="text-sm text-zinc-600">
+          </p>
+          <p className="text-sm text-zinc-600">
             Created on:{" "}
             {new Date(listDetail.created_at).toLocaleString("en-US")}
-          </span>
+          </p>
+          <div className="flex flex-row justify-start items-center font-medium gap-x-2 mt-2 select-none">
+            <Image
+              src={listPfp ?? "/avatar.webp"}
+              alt={`${listDetail.email.split("@")[0]}`}
+              className="rounded-sm"
+              draggable={false}
+              width={30}
+              height={30}
+            />
+            {list.user_id != userId && (
+              <p className="text-md text-zinc-800">
+                {listDetail.email.split("@")[0]}
+              </p>
+            )}
+          </div>
         </div>
 
         <div
@@ -121,9 +140,9 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
             className="cursor-pointer h-fit flex px-3 py-3 mr-6 bg-zinc-100 hover:bg-zinc-200 rounded-md transition-all select-none"
           >
             <IoMdShare size={20} className="text-zinc-900 opacity-90" />
-            <span hidden className="text-red-600">
+            <p hidden className="text-red-600">
               Delete
-            </span>
+            </p>
           </button>
 
           {list.user_id === userId && (
@@ -137,7 +156,7 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
                   size={14}
                   className="mr-2 text-red-700 opacity-90"
                 />
-                <span className="text-red-600">Delete</span>
+                <p className="text-red-600">Delete</p>
               </button>
 
               {/* Edit Button */}
@@ -146,7 +165,7 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
                 className="cursor-pointer flex items-center px-3 py-2 hover:bg-sky-50 rounded-md transition-all select-none"
               >
                 <FaEdit size={16} className="mr-2 text-sky-700" />
-                <span className="text-sky-600">Edit</span>
+                <p className="text-sky-600">Edit</p>
               </button>
             </>
           )}
