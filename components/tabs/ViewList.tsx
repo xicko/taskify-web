@@ -8,6 +8,7 @@ import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import ScrollBar from "react-scrollbars-custom";
 import { toast } from "sonner";
+import RichTextRenderer from "../RichTextRenderer";
 
 const ViewList = () => {
   const list = useAtomValue(listViewAtom);
@@ -54,7 +55,12 @@ const ViewList = () => {
           <h2 className="text-xl font-semibold mb-1">{list.title}</h2>
           <div className="h-full">
             <ScrollBar disableTracksWidthCompensation>
-              <p className="whitespace-pre-line pr-20">{list.content}</p>
+              <p className="whitespace-pre-line pr-20">
+                <RichTextRenderer
+                  deltaJson={list.content}
+                  styles="whitespace-pre-line pr-20 text-black"
+                />
+              </p>
             </ScrollBar>
           </div>
 

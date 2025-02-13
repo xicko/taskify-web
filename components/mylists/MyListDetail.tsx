@@ -7,6 +7,7 @@ import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
 import { toast } from "sonner";
+import RichTextRenderer from "../RichTextRenderer";
 
 const MyListDetail = () => {
   // Access the selected list
@@ -89,7 +90,12 @@ const MyListDetail = () => {
               isFading ? "opacity-0" : "opacity-100"
             }`}
           >
-            {listDetail.content}
+            <RichTextRenderer
+              deltaJson={listDetail.content}
+              styles={`whitespace-pre-line pr-20 text-black transition-opacity ease-in-out ${
+                isFading ? "opacity-0" : "opacity-100"
+              }`}
+            />
           </p>
         </ScrollBar>
       </div>

@@ -12,6 +12,7 @@ import {
   errorAtom,
 } from "@/state/listAtoms";
 import { IoMdRefresh } from "react-icons/io";
+import RichTextRenderer from "../RichTextRenderer";
 
 interface SelectListType {
   id: string;
@@ -106,7 +107,10 @@ const Lists = ({}: { onSelectList: (list: SelectListType) => void }) => {
               {item.is_public ? "Public" : "Private"}
             </span>
             <span className="text-zinc-700 text-md whitespace-pre-line line-clamp-4 text-ellipsis overflow-hidden">
-              {item.content}
+              <RichTextRenderer
+                deltaJson={item.content}
+                styles="text-zinc-700 text-md whitespace-pre-line line-clamp-4 text-ellipsis overflow-hidden"
+              />
             </span>
             <span className="text-zinc-500 text-sm absolute top-5 right-7">
               {`${new Date(item.updated_at).getMonth() + 1}/${new Date(

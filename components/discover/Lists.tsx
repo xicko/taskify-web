@@ -6,6 +6,7 @@ import { listsPublicAtom, loadingAtom } from "@/state/listAtoms";
 import { IoMdRefresh } from "react-icons/io";
 import { fetchUsersPfpAtom } from "@/state/methods/fetchUsersPfpAtom";
 import Image from "next/image";
+import RichTextRenderer from "../RichTextRenderer";
 
 interface ListsType {
   id: string;
@@ -124,7 +125,10 @@ const Lists = ({
               <p>{item.email.split("@")[0]}</p>
             </span>
             <span className="text-zinc-700 text-md whitespace-pre-line line-clamp-4 text-ellipsis overflow-hidden">
-              {item.content}
+              <RichTextRenderer
+                deltaJson={item.content}
+                styles="text-zinc-700 text-md whitespace-pre-line line-clamp-4 text-ellipsis overflow-hidden"
+              />
             </span>
             <span className="text-zinc-500 text-sm absolute top-5 right-7">
               {`${new Date(item.updated_at).getMonth() + 1}/${new Date(

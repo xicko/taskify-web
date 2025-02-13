@@ -8,6 +8,7 @@ import { listViewAtom } from "@/state/listAtoms";
 import Image from "next/image";
 import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
 import { listPfpAtom } from "@/state/authAtoms";
+import RichTextRenderer from "./RichTextRenderer";
 
 const IsMobile = () => {
   const list = useAtomValue(listViewAtom);
@@ -56,7 +57,10 @@ const IsMobile = () => {
               </h2>
 
               <div className="whitespace-pre-line max-h-[60dvh] overflow-y-auto">
-                {list?.content ?? ""}
+                <RichTextRenderer
+                  deltaJson={list?.content ?? ""}
+                  styles="whitespace-pre-line max-h-[60dvh] overflow-y-auto text-black"
+                />
               </div>
             </div>
           </div>

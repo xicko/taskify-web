@@ -8,6 +8,7 @@ import { useAtomValue, useSetAtom } from "jotai";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
 import Image from "next/image";
 import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
+import RichTextRenderer from "../RichTextRenderer";
 
 interface DiscoverListDetail {
   id: string;
@@ -94,7 +95,12 @@ const DiscoverListDetail = ({ list }: { list: DiscoverListDetail }) => {
               isFading ? "opacity-0" : "opacity-100"
             }`}
           >
-            {listDetail.content}
+            <RichTextRenderer
+              deltaJson={listDetail.content}
+              styles={`whitespace-pre-line pr-20 transition-opacity ease-in-out text-black ${
+                isFading ? "opacity-0" : "opacity-100"
+              }`}
+            />
           </p>
         </ScrollBar>
       </div>
