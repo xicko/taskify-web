@@ -22,7 +22,7 @@ const RichTextRenderer: React.FC<RichTextProps> = ({ deltaJson, styles }) => {
     // If it's a valid Delta, render the HTML content
     return (
       <span
-        className={`prose max-w-none dark:prose-invert ${styles}`}
+        className={`prose max-w-none dark:prose-invert whitespace-pre-wrap ${styles}`}
         dangerouslySetInnerHTML={{ __html: html }}
       />
     );
