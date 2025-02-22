@@ -25,6 +25,7 @@ import {
 } from "@/state/baseAtoms";
 import { exportAllUserListsAtom } from "@/state/methods/exportAllUserLists";
 import { toast } from "sonner";
+import { updatePasswordAtom } from "@/state/methods/updatePasswordAtom";
 
 const MeScreen = () => {
   const setIsUserLoggedIn = useSetAtom(isUserLoggedInAtom);
@@ -84,7 +85,9 @@ const MeScreen = () => {
   // Email change
   const [email, setEmail] = useState(userEmail);
   const changeEmail = useSetAtom(changeEmailAtom);
-  const handleChange = (event: React.ChangeEvent<HTMLInputElement>) => {
+  const handleEmailInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
     setEmail(event.target.value);
   };
   const handleEmailChange = () => {
@@ -98,6 +101,44 @@ const MeScreen = () => {
     } else {
       toast("New email cannot be same as current email.");
     }
+  };
+
+  // Update password
+  const updatePassword = useSetAtom(updatePasswordAtom);
+  const [currentPassword, setCurrentPassword] = useState<string>("");
+  const [newPassword, setNewPassword] = useState<string>("");
+  const [confirmPassword, setConfirmPassword] = useState<string>("");
+  const handleCurrentPasswordInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setCurrentPassword(event.target.value);
+  };
+  const handleNewPasswordInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setNewPassword(event.target.value);
+  };
+  const handleConfirmPasswordInputChange = (
+    event: React.ChangeEvent<HTMLInputElement>
+  ) => {
+    setConfirmPassword(event.target.value);
+  };
+  const isPasswordValid = () => {
+    if (
+      currentPassword.length > 7 &&
+      newPassword === confirmPassword &&
+      newPassword.length > 7 &&
+      confirmPassword.length > 7
+    ) {
+      return true;
+    } else {
+      return false;
+    }
+  };
+  const clearPasswordFields = () => {
+    setCurrentPassword("");
+    setNewPassword("");
+    setConfirmPassword("");
   };
 
   // Export Lists as JSON
@@ -116,6 +157,8 @@ const MeScreen = () => {
           <span className="font-semibold text-2xl select-none">
             Account Settings
           </span>
+
+          {/* Profile pic and logout button */}
           <div className="flex items-center my-6">
             <div className="w-[120px] h-[120px] overflow-hidden rounded-md flex justify-center items-center mr-6">
               <Image
@@ -147,6 +190,7 @@ const MeScreen = () => {
           </div>
         </>
 
+        {/* Change Email */}
         <div className="flex flex-col mb-10 items-start">
           <span className="mb-2 font-medium text-lg select-none">
             Change Email
@@ -156,7 +200,7 @@ const MeScreen = () => {
               className="w-full py-1 bg-transparent text-lg outline-none border-b-2 border-gray-200 focus:border-gray-600 transition-all"
               placeholder="Email address"
               value={email ?? ""}
-              onChange={handleChange}
+              onChange={handleEmailInputChange}
               id="email"
               type="email"
             />
@@ -177,25 +221,42 @@ const MeScreen = () => {
           </div>
         </div>
 
+        {/* Update password */}
         <div className="flex flex-col items-start mb-10">
           <span className="mb-2 font-medium text-lg select-none">
             Update Password
           </span>
           <Input
+            value={currentPassword}
+            onChange={handleCurrentPasswordInputChange}
             className="w-full py-1 bg-transparent text-lg outline-none border-b-2 border-gray-200 focus:border-gray-600 transition-all mb-2"
             placeholder="Current password"
           />
           <Input
+            value={newPassword}
+            onChange={handleNewPasswordInputChange}
             className="w-full py-1 bg-transparent text-lg outline-none border-b-2 border-gray-200 focus:border-gray-600 transition-all mb-2"
             placeholder="New password"
           />
           <Input
+            value={confirmPassword}
+            onChange={handleConfirmPasswordInputChange}
             className="w-full py-1 bg-transparent text-lg outline-none border-b-2 border-gray-200 focus:border-gray-600 transition-all mb-2"
             placeholder="Confirm new password"
           />
           <button
-            onClick={() => {}}
-            className="mt-1 font-medium bg-[#83ceff] bg-opacity-50 hover:bg-opacity-70 px-6 py-2 rounded-md select-none transition-all"
+            onClick={() => {
+              if (isPasswordValid()) {
+                updatePassword(currentPassword, newPassword);
+                clearPasswordFields();
+                toast("Password updated");
+              } else {
+                toast("Password invalid, please try again");
+              }
+            }}
+            className={`mt-1 font-medium ${
+              isPasswordValid() ? "bg-[#83ceff]" : "bg-zinc-300"
+            }  bg-opacity-50 hover:bg-opacity-70 px-6 py-2 rounded-md select-none transition-all`}
           >
             Update
           </button>
