@@ -1,28 +1,39 @@
 import React, { useRef, useState } from "react";
 import { Button, Field, Input } from "@headlessui/react";
 import Icons from "@/components/Icons";
-import { useSetAtom } from "jotai";
+import { useAtomValue, useSetAtom } from "jotai";
 import { searchListAtom } from "@/state/methods/searchListAtom";
 import { MdClear } from "react-icons/md";
+import { isEditModeAtom } from "@/state/listEditAtoms";
+import { toast } from "sonner";
 
 const MyListSearchBar = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const searchList = useSetAtom(searchListAtom);
   const debounceTimeout = useRef<NodeJS.Timeout | null>(null);
 
+  const isEditMode = useAtomValue(isEditModeAtom);
+
   const handleInputChange = (event: React.ChangeEvent<HTMLInputElement>) => {
-    setSearchQuery(event.target.value);
+    // Show toast if currently editing a list
+    if (isEditMode) {
+      toast("Search not available while editing a list.");
+    } else {
+      // Let user search if not editing any list
+      setSearchQuery(event.target.value);
 
-    // Clear the previous timeout
-    if (debounceTimeout.current) {
-      clearTimeout(debounceTimeout.current);
+      // Clear the previous timeout
+      if (debounceTimeout.current) {
+        clearTimeout(debounceTimeout.current);
+      }
+
+      debounceTimeout.current = setTimeout(() => {
+        searchList(event.target.value);
+      }, 700);
     }
-
-    debounceTimeout.current = setTimeout(() => {
-      searchList(event.target.value);
-    }, 700);
   };
 
+  // not used
   const handleSearch = () => {
     if (searchQuery.length > 0) {
       searchList(searchQuery);

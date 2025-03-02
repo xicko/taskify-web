@@ -4,6 +4,9 @@ import { atom } from "jotai";
 export const loadingAtom = atom<boolean>(false); // This atom holds the loading state
 export const errorAtom = atom<string | null>(null); // This atom holds any error message
 
+// Store current list being shown in listDetail
+export const currentListAtom = atom<string>("");
+
 // User's Lists
 export const listDetailAtom = atom<null | {
   is_public: boolean;

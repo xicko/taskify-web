@@ -6,24 +6,44 @@ import Link from "next/link";
 import Icons from "@/components/Icons";
 import { useAtom, useSetAtom } from "jotai";
 import { fadeKeyAtom, isFadingAtom, navIndexAtom } from "@/state/baseAtoms";
+import { currentListAtom } from "@/state/listAtoms";
+import {
+  isDiscardEditVisibleAtom,
+  isEditModeAtom,
+} from "@/state/listEditAtoms";
 
 export const NavBar = () => {
   const [navIndex, setNavIndex] = useAtom(navIndexAtom);
   const setFadeKey = useSetAtom(fadeKeyAtom); // Tracks the active content
   const setIsFading = useSetAtom(isFadingAtom); // Animation control
 
+  const setCurrentList = useSetAtom(currentListAtom);
+  const [isEditMode, setIsEditMode] = useAtom(isEditModeAtom);
+  const setIsDiscardEditVisible = useSetAtom(isDiscardEditVisibleAtom);
+
   // Handle navbar index
   const handleNavigate = (index: number) => {
     if (index === navIndex) return;
-    setIsFading(true);
-    setTimeout(() => {
-      setFadeKey(index);
-      setNavIndex(index);
-      setIsFading(false);
-    }, 200);
+    if (isEditMode) {
+      // Show discard confirmation dialog if editmode is true
+      setIsDiscardEditVisible(true);
+      return;
+    } else {
+      // Navigate normally if editmode is false
+      setIsFading(true);
+      setTimeout(() => {
+        setFadeKey(index);
+        setNavIndex(index);
+        setIsFading(false);
+      }, 200);
 
-    // Clear url query param whenever navbarindex changes
-    window.history.replaceState(null, "", window.location.pathname);
+      // Clear states
+      setIsEditMode(false);
+      setCurrentList("");
+
+      // Clear url query param whenever navbarindex changes
+      window.history.replaceState(null, "", window.location.pathname);
+    }
   };
 
   return (

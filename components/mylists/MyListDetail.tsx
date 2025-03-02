@@ -2,17 +2,33 @@ import React, { useEffect, useState } from "react";
 import ScrollBar from "react-scrollbars-custom";
 import { useAtomValue, useSetAtom } from "jotai";
 import { isListDetailVisibleAtom } from "@/state/baseAtoms";
-import { listDetailAtom } from "@/state/listAtoms";
+import { currentListAtom, listDetailAtom } from "@/state/listAtoms";
 import { FaEdit, FaTimes, FaTrashAlt } from "react-icons/fa";
 import { IoMdShare } from "react-icons/io";
 import { deleteListAtom } from "@/state/methods/deleteListAtom";
 import { toast } from "sonner";
 import RichTextRenderer from "../RichTextRenderer";
+import {
+  editListContentAtom,
+  editListIdAtom,
+  editListIsPublicAtom,
+  editListTitleAtom,
+  isEditModeAtom,
+} from "@/state/listEditAtoms";
 
 const MyListDetail = () => {
   // Access the selected list
   const list = useAtomValue(listDetailAtom);
   const [listDetail, setListDetail] = useState(list);
+
+  // For passing current list data to editor
+  const setIsEditMode = useSetAtom(isEditModeAtom);
+  const setEditListId = useSetAtom(editListIdAtom);
+  const setEditListTitle = useSetAtom(editListTitleAtom);
+  const setEditListContent = useSetAtom(editListContentAtom);
+  const setEditListIsPublic = useSetAtom(editListIsPublicAtom);
+
+  const setCurrentList = useSetAtom(currentListAtom);
 
   // Fade Anim
   const [isFading, setIsFading] = useState(false);
@@ -142,7 +158,16 @@ const MyListDetail = () => {
 
         {/* Edit Button */}
         <button
-          onClick={() => {}}
+          onClick={() => {
+            setIsEditMode(true);
+
+            setEditListId(listDetail.id);
+            setEditListTitle(listDetail.title);
+            setEditListContent(listDetail.content);
+            setEditListIsPublic(listDetail.is_public);
+
+            setListDetailVisible(false);
+          }}
           className="cursor-pointer flex items-center px-3 py-2 hover:bg-sky-50 rounded-md transition-all select-none"
         >
           <FaEdit size={16} className="mr-2 text-sky-700" />
@@ -151,7 +176,11 @@ const MyListDetail = () => {
 
         {/* Close Button */}
         <button
-          onClick={() => setListDetailVisible(false)}
+          onClick={() => {
+            setListDetailVisible(false);
+            setIsEditMode(false);
+            setCurrentList("");
+          }}
           className="cursor-pointer flex items-center px-3 py-2 bg-gray-100 hover:bg-gray-200 rounded-md transition-all select-none"
         >
           <FaTimes className="mr-2 text-gray-700" />

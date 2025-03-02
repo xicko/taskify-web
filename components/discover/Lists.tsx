@@ -1,8 +1,12 @@
 import React, { useEffect, useRef, useState } from "react";
 import { Scrollbar } from "react-scrollbars-custom";
-import { useAtomValue, useSetAtom } from "jotai";
+import { useAtom, useAtomValue, useSetAtom } from "jotai";
 import { fetchPublicListsAtom } from "@/state/methods/fetchPublicListsAtom";
-import { listsPublicAtom, loadingAtom } from "@/state/listAtoms";
+import {
+  currentListAtom,
+  listsPublicAtom,
+  loadingAtom,
+} from "@/state/listAtoms";
 import { IoMdRefresh } from "react-icons/io";
 import { fetchUsersPfpAtom } from "@/state/methods/fetchUsersPfpAtom";
 import Image from "next/image";
@@ -27,6 +31,8 @@ const Lists = ({
   const setFetchPublicLists = useSetAtom(fetchPublicListsAtom);
   const lists = useAtomValue(listsPublicAtom);
 
+  const [currentList, setCurrentList] = useAtom(currentListAtom);
+
   // Fetch users profile pictures
   const fetchUsersPfp = useSetAtom(fetchUsersPfpAtom); // Method to fetch pfp based on user_id
   const [pfps, setPfps] = useState<Record<string, string>>({}); // Stores fetched user_id as key, and returns the base64 as string
@@ -34,6 +40,8 @@ const Lists = ({
 
   // List click
   const handleListClick = (list: ListsType) => {
+    setCurrentList(list.id);
+
     // Passes selected list to parent
     onSelectList(list);
 
@@ -104,7 +112,9 @@ const Lists = ({
           <div
             key={index}
             onClick={() => handleListClick(item)}
-            className="bg-white hover:bg-slate-200 w-full flex flex-col cursor-pointer pl-5 pr-6 py-5 relative mt-[3px] rounded-[4px] select-none ease-in-out transition duration-150"
+            className={`${
+              item.id === currentList ? "bg-slate-200" : "bg-white"
+            } hover:bg-slate-200 w-full flex flex-col cursor-pointer pl-5 pr-6 py-5 relative mt-[3px] rounded-[4px] select-none ease-in-out transition duration-150`}
           >
             <span className="w-[13vw] text-black text-lg font-semibold line-clamp-3 text-ellipsis">
               {item.title}

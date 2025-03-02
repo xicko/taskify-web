@@ -7,7 +7,7 @@ import Discover from "@/components/tabs/Discover";
 import Me from "@/components/tabs/Me";
 import MyLists from "@/components/tabs/MyLists";
 import { NavBar } from "@/components/NavBar";
-import React from "react";
+import React, { useState } from "react";
 import { useAtomValue } from "jotai";
 import { useEffect } from "react";
 import { supabase } from "@/lib/supabaseClient";
@@ -26,6 +26,7 @@ import { Toaster } from "@/components/ui/sonner";
 import ViewList from "@/components/tabs/ViewList";
 import { fetchListViewAtom } from "@/state/methods/fetchListViewAtom";
 import { fetchPfpAtom } from "@/state/methods/fetchPfpAtom";
+import { Alert, AlertDescription, AlertTitle } from "@/components/ui/alert";
 
 // Tabs
 const tabs = [<MyLists key="0" />, <Discover key="1" />, <Me key="2" />];
@@ -42,6 +43,17 @@ export default function Home() {
   const setHasProfilePic = useSetAtom(hasProfilePicAtom);
 
   const fetchPfp = useSetAtom(fetchPfpAtom);
+
+  const [announcementVisible, setAnnouncementVisible] = useState(true);
+  const [announcementAnim, setAnnouncementAnim] = useState(true);
+  useEffect(() => {
+    setTimeout(() => {
+      setAnnouncementAnim(false);
+    }, 10000);
+    setTimeout(() => {
+      setAnnouncementVisible(false);
+    }, 12000);
+  }, []);
 
   // Auth init
   useEffect(() => {
@@ -122,7 +134,7 @@ export default function Home() {
     return (
       <>
         <SplashScreen duration={200} />
-        <main className="h-[100dvh] flex items-center justify-center">
+        <main className="relative h-[100dvh] flex items-center justify-center">
           <div className="absolute -z-50 top-0 bottom-0 left-0 right-0">
             <Background />
           </div>
@@ -142,7 +154,27 @@ export default function Home() {
               </div>
             </section>
           </div>
+
+          {announcementVisible ? (
+            <div
+              className={`${
+                announcementAnim ? "opacity-100" : "opacity-0"
+              } absolute bottom-12 transition-opacity ease-in-out duration-2000 shadow-md`}
+            >
+              <Alert>
+                <AlertTitle>Reminder</AlertTitle>
+                <AlertDescription>
+                  Web version does not support rich text formatting yet, any
+                  list you edit will break the formatting, please use the mobile
+                  version for editing.
+                </AlertDescription>
+              </Alert>
+            </div>
+          ) : (
+            <></>
+          )}
         </main>
+
         <Toaster />
       </>
     );
